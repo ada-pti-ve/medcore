@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDCORE/14 — Подготовка боевых медиков</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d1522; --red:#c8202f; --blue:#1e56d6; --mint:#12876a;
+  --glass:rgba(255,255,255,.72); --line:rgba(13,21,34,.1);
+  --text:#2b3a55; --muted:#54648a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif; color:var(--ink);
+  background:linear-gradient(180deg,#f7f9fd 0%,#eef2f9 100%);
+}
+.wrap{max-width:1140px;margin:0 auto;padding:0 32px;position:relative;z-index:10}
+
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(250,251,254,.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:15px 32px;max-width:1140px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Unbounded';font-weight:900;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.logo .mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(145deg,#fff,#e7edf7);border:1px solid var(--line);box-shadow:0 8px 20px -8px rgba(30,86,214,.35);display:grid;place-items:center}
+.logo .mark svg{width:17px;height:17px}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--text);transition:color .3s}
+.nav-links a:hover{color:var(--blue)}
+@media(max-width:760px){.nav-links a:not(.btn){display:none}}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;font-family:'Unbounded';font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:16px 28px;border-radius:999px;border:none;cursor:pointer;transition:transform .35s cubic-bezier(.2,.9,.25,1.2),box-shadow .35s ease,background .3s;text-decoration:none}
+.btn-soon{color:#fff;background:linear-gradient(120deg,#1e56d6,#3f78f0);box-shadow:0 14px 32px -12px rgba(30,86,214,.55)}
+.btn-soon:hover{transform:translateY(-3px);box-shadow:0 22px 46px -14px rgba(30,86,214,.65)}
+.btn-soon .badge{font-family:'Inter';font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4);padding:4px 9px;border-radius:999px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.btn-ghost{color:var(--ink);background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 8px 24px -18px rgba(13,21,34,.5)}
+.btn-ghost:hover{transform:translateY(-3px);border-color:rgba(30,86,214,.45)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:110px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Unbounded';font-size:11px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--red);margin-bottom:22px}
+.eyebrow::before{content:"";width:34px;height:2px;background:var(--red);border-radius:2px}
+h1{font-family:'Unbounded';font-weight:900;font-size:clamp(38px,6vw,72px);line-height:1.05;letter-spacing:-.01em;margin-bottom:24px;color:var(--ink)}
+.hero p{font-size:17px;font-weight:500;line-height:1.7;color:var(--text);max-width:50ch;margin-bottom:36px}
+.hero p b{color:var(--ink)}
+.stats{display:flex;gap:14px;margin-top:48px;flex-wrap:wrap}
+.stat{min-width:140px;padding:18px 22px;border-radius:18px;background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 14px 34px -24px rgba(13,21,34,.55);transition:transform .4s cubic-bezier(.2,.9,.3,1.2)}
+.stat:hover{transform:translateY(-5px)}
+.stat .num{font-family:'Unbounded';font-weight:900;font-size:28px;color:var(--ink)}
+.stat .lbl{font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);animation:hint 2.4s ease-in-out infinite}
+@keyframes hint{0%,100%{transform:translate(-50%,0);opacity:.7}50%{transform:translate(-50%,10px);opacity:1}}
+
+/* ---------- sections ---------- */
+section{padding:100px 0}
+.sec-head{margin-bottom:52px}
+.sec-head .eyebrow{margin-bottom:14px}
+h2{font-family:'Unbounded';font-weight:900;font-size:clamp(26px,3.4vw,42px);line-height:1.12;color:var(--ink)}
+.sec-head p{margin-top:14px;font-size:16px;font-weight:500;color:var(--text);max-width:62ch;line-height:1.7}
+
+/* reveal on scroll */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:translateY(0)}
+
+/* ---------- training ---------- */
+.timeline{display:grid;gap:16px}
+.t-card{display:grid;grid-template-columns:120px 54px 1fr;gap:22px;align-items:start;padding:26px 30px;border-radius:22px;background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 18px 46px -32px rgba(30,60,140,.4);transition:transform .4s cubic-bezier(.2,.9,.3,1.2),box-shadow .4s}
+.t-card:hover{transform:translateY(-5px);box-shadow:0 30px 64px -34px rgba(30,60,140,.5)}
+.t-days{font-family:'Unbounded';font-weight:900;font-size:13px;letter-spacing:.05em;padding:11px 0;text-align:center;border-radius:13px;color:#fff}
+.d1{background:linear-gradient(135deg,#1e56d6,#5b8bf0)}
+.d2{background:linear-gradient(135deg,#c8202f,#ef5d70)}
+.d3{background:linear-gradient(135deg,#12876a,#35c49c)}
+.t-ico{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;color:#fff}
+.t-card h3{font-family:'Unbounded';font-weight:700;font-size:16px;color:var(--ink);margin-bottom:8px}
+.t-card p{font-weight:500;color:var(--text);font-size:14px;line-height:1.65}
+.t-card ul{margin-top:12px;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.t-card ul li{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(30,86,214,.1);border:1px solid rgba(30,86,214,.22);color:#1a3f9e}
+@media(max-width:640px){.t-card{grid-template-columns:1fr}.t-days{width:fit-content;padding:11px 16px}}
+
+/* ---------- conditions ---------- */
+.cond-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.cond{padding:28px 26px;border-radius:22px;background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 18px 46px -32px rgba(30,60,140,.4);transition:transform .4s cubic-bezier(.2,.9,.3,1.2)}
+.cond:hover{transform:translateY(-6px)}
+.cond .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff;margin-bottom:16px}
+.i-blue{background:linear-gradient(135deg,#1e56d6,#5b8bf0);box-shadow:0 12px 24px -8px rgba(30,86,214,.55)}
+.i-red{background:linear-gradient(135deg,#c8202f,#ef5d70);box-shadow:0 12px 24px -8px rgba(200,32,47,.5)}
+.i-mint{background:linear-gradient(135deg,#12876a,#35c49c);box-shadow:0 12px 24px -8px rgba(18,135,106,.5)}
+.i-dark{background:linear-gradient(135deg,#0d1522,#33415e);box-shadow:0 12px 24px -8px rgba(13,21,34,.5)}
+.cond h3{font-family:'Unbounded';font-weight:700;font-size:15px;color:var(--ink);margin-bottom:10px}
+.cond p{font-weight:500;color:var(--text);font-size:14px;line-height:1.65}
+.cond p b{color:var(--ink)}
+
+/* ---------- cta ---------- */
+.cta-final{text-align:center;padding:110px 32px}
+.cta-final h2{margin-bottom:16px}
+.cta-final p{color:var(--text);font-weight:500;max-width:54ch;margin:0 auto 34px;line-height:1.7}
+.marquee{overflow:hidden;padding:14px 0;border-top:1px solid var(--line);background:rgba(250,251,254,.7);backdrop-filter:blur(12px)}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:slide 26s linear infinite;font-family:'Unbounded';font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#3a4a6b;white-space:nowrap}
+@keyframes slide{to{transform:translateX(-50%)}}
+footer{padding:28px 32px;text-align:center;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(240,244,250,.6);backdrop-filter:blur(16px);opacity:0;pointer-events:none;transition:opacity .4s ease}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{width:min(440px,90vw);padding:40px 38px;border-radius:26px;background:rgba(255,255,255,.95);border:1px solid #fff;box-shadow:0 46px 110px -40px rgba(30,60,140,.5);text-align:center;transform:translateY(28px) scale(.94);transition:transform .5s cubic-bezier(.2,.9,.3,1.2)}
+.overlay.show .modal{transform:translateY(0) scale(1)}
+.modal .pill{display:inline-block;font-family:'Unbounded';font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);background:rgba(30,86,214,.1);border:1px solid rgba(30,86,214,.25);padding:8px 16px;border-radius:999px;margin-bottom:18px;animation:pulse 2.4s ease-in-out infinite}
+.modal h2{font-size:22px;margin-bottom:12px}
+.modal p{font-size:14px;font-weight:500;line-height:1.65;color:var(--text);margin-bottom:26px}
+.modal .close{font-family:'Unbounded';font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:all .3s ease}
+.modal .close:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
+
+/* ---------- auth ---------- */
+.m-tabs{display:flex;gap:6px;background:rgba(13,21,34,.06);padding:5px;border-radius:999px;margin-bottom:22px}
+.m-tabs button{flex:1;font-family:'Unbounded';font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .3s}
+.m-tabs button.on{background:#fff;color:var(--ink);box-shadow:0 6px 16px -8px rgba(13,21,34,.35)}
+.field{text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.field input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(247,249,253,.9);font:600 14px 'Inter',sans-serif;color:var(--ink);outline:none;transition:border .3s,box-shadow .3s}
+.field input:focus{border-color:rgba(30,86,214,.55);box-shadow:0 0 0 4px rgba(30,86,214,.12)}
+.form-err{min-height:18px;font-size:12px;font-weight:600;color:var(--red);margin:0 0 12px;text-align:left}
+.btn-submit{width:100%;justify-content:center;color:#fff;background:linear-gradient(120deg,#1e56d6,#3f78f0);box-shadow:0 14px 32px -12px rgba(30,86,214,.55)}
+.btn-submit:hover{transform:translateY(-3px);box-shadow:0 22px 46px -14px rgba(30,86,214,.65)}
+.switch-hint{margin-top:16px;font-size:12px;font-weight:500;color:var(--muted)}
+.switch-hint button{background:none;border:none;font:700 12px 'Inter',sans-serif;color:var(--blue);cursor:pointer;text-decoration:underline;padding:0}
+.m-view{display:none}
+.m-view.on{display:block;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.check{width:76px;height:76px;margin:4px auto 20px;border-radius:50%;background:linear-gradient(135deg,#12876a,#35c49c);display:grid;place-items:center;color:#fff;box-shadow:0 18px 40px -12px rgba(18,135,106,.55);animation:pop .55s cubic-bezier(.2,1.4,.3,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.check svg{width:36px;height:36px}
+.check path{stroke-dasharray:32;stroke-dashoffset:32;animation:draw .5s .35s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.who{font-size:13px;font-weight:600;color:var(--muted);margin:-6px 0 20px;line-height:1.7}
+.who b{color:var(--ink)}
+.avatar{width:72px;height:72px;margin:0 auto 18px;border-radius:50%;background:linear-gradient(135deg,#1e56d6,#5b8bf0);display:grid;place-items:center;font-family:'Unbounded';font-weight:900;font-size:24px;color:#fff;box-shadow:0 18px 40px -12px rgba(30,86,214,.55)}
+.row-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ---------- theory mode ---------- */
+.btn-sm{padding:12px 22px;font-size:11px}
+.btn-mint{color:#fff;background:linear-gradient(120deg,#12876a,#2fbf97);box-shadow:0 14px 32px -12px rgba(18,135,106,.55)}
+.btn-mint:hover{transform:translateY(-3px);box-shadow:0 22px 46px -14px rgba(18,135,106,.65)}
+.theory{position:fixed;inset:0;z-index:120;background:linear-gradient(180deg,#f7f9fd 0%,#eef2f9 100%);display:none;flex-direction:column;overflow:hidden}
+.theory.show{display:flex}
+.th-head{display:flex;align-items:center;gap:22px;padding:15px 32px;background:rgba(250,251,254,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:5}
+.th-brand{font-family:'Unbounded';font-weight:900;font-size:13px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.th-brand span{color:var(--blue)}
+.th-prog{flex:1;height:10px;border-radius:999px;background:rgba(13,21,34,.08);overflow:hidden}
+.th-prog-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#1e56d6,#35c49c);transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.th-count{font-family:'Unbounded';font-weight:700;font-size:11px;letter-spacing:.12em;color:var(--muted);white-space:nowrap}
+.th-close{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:pointer;display:grid;place-items:center;color:var(--ink);transition:all .3s}
+.th-close:hover{background:var(--ink);color:#fff;transform:rotate(90deg)}
+.th-body{flex:1;overflow-y:auto;padding:44px 32px 24px}
+.th-lesson{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:36px;align-items:start;animation:fadeUp .5s cubic-bezier(.2,.7,.3,1)}
+.th-art{position:sticky;top:0;padding:26px;border-radius:26px;background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 24px 60px -36px rgba(30,60,140,.45)}
+.th-art svg{width:100%;height:auto;display:block}
+.th-art-badge{position:absolute;top:16px;left:18px;font-family:'Unbounded';font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--blue);background:rgba(30,86,214,.1);border:1px solid rgba(30,86,214,.25);padding:6px 12px;border-radius:999px}
+.th-tag{display:inline-block;font-family:'Unbounded';font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:7px 14px;border-radius:999px;margin-bottom:14px}
+.tag-red{color:#c8202f;background:rgba(200,32,47,.1);border:1px solid rgba(200,32,47,.25)}
+.tag-blue{color:#1a3f9e;background:rgba(30,86,214,.1);border:1px solid rgba(30,86,214,.25)}
+.tag-mint{color:#0f6b53;background:rgba(18,135,106,.1);border:1px solid rgba(18,135,106,.25)}
+.tag-dark{color:var(--ink);background:rgba(13,21,34,.07);border:1px solid rgba(13,21,34,.2)}
+.th-text h3{font-family:'Unbounded';font-weight:900;font-size:clamp(21px,2.6vw,30px);line-height:1.15;color:var(--ink);margin-bottom:16px}
+.th-text p{font-size:15px;font-weight:500;line-height:1.75;color:var(--text);margin-bottom:14px}
+.th-text p b{color:var(--ink)}
+.th-points{list-style:none;display:grid;gap:9px;margin:18px 0 26px}
+.th-points li{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;font-weight:600;color:var(--ink);padding:12px 16px;border-radius:14px;background:var(--glass);border:1px solid var(--line)}
+.th-points li::before{content:"";flex:none;width:9px;height:9px;margin-top:4px;border-radius:50%;background:linear-gradient(135deg,#1e56d6,#35c49c)}
+.th-quiz{border:1.5px dashed rgba(30,86,214,.4);border-radius:20px;padding:22px;background:rgba(30,86,214,.04);transition:box-shadow .3s,border-color .3s}
+.th-quiz.warn{box-shadow:0 0 0 4px rgba(200,32,47,.16);border-color:rgba(200,32,47,.6)}
+.th-q{font-family:'Unbounded';font-weight:700;font-size:13px;color:var(--ink);margin-bottom:14px;line-height:1.5}
+.th-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:600 13.5px 'Inter',sans-serif;color:var(--text);padding:13px 15px;margin-bottom:9px;border-radius:13px;border:1px solid var(--line);background:#fff;cursor:pointer;transition:all .25s}
+.th-opt:last-of-type{margin-bottom:0}
+.th-opt:hover:not(:disabled){border-color:rgba(30,86,214,.5);transform:translateX(4px)}
+.th-opt:disabled{cursor:default}
+.th-opt.ok{border-color:#12876a;background:rgba(18,135,106,.1);color:#0f6b53}
+.th-opt.bad{border-color:#c8202f;background:rgba(200,32,47,.08);color:#c8202f;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.th-letter{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:'Unbounded';font-weight:700;font-size:11px;background:rgba(13,21,34,.06);color:var(--ink)}
+.th-opt.ok .th-letter{background:#12876a;color:#fff}
+.th-opt.bad .th-letter{background:#c8202f;color:#fff}
+.th-expl{font-size:13px;font-weight:500;line-height:1.6;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-top:12px;animation:fadeUp .4s}
+.th-expl b{color:var(--ink)}
+.th-foot{display:flex;align-items:center;gap:18px;padding:15px 32px;background:rgba(250,251,254,.88);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.th-nav{min-width:150px;justify-content:center}
+.th-dots{display:flex;gap:7px;flex:1;justify-content:center;flex-wrap:wrap}
+.th-dot{width:10px;height:10px;border-radius:50%;border:none;background:rgba(13,21,34,.15);cursor:pointer;transition:all .3s;padding:0}
+.th-dot.on{background:var(--blue);transform:scale(1.3)}
+.th-dot.done{background:#12876a}
+.th-finish{max-width:620px;margin:5vh auto 40px;text-align:center;animation:fadeUp .5s}
+.th-finish h3{font-family:'Unbounded';font-weight:900;font-size:clamp(24px,3vw,34px);margin-bottom:12px}
+.th-finish>p{color:var(--text);font-weight:500;line-height:1.7;max-width:52ch;margin:0 auto 26px}
+.th-grades{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.th-grade{padding:16px 26px;border-radius:18px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(12px)}
+.th-grade .n{font-family:'Unbounded';font-weight:900;font-size:24px}
+.th-grade .l{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+@media(max-width:900px){.th-lesson{grid-template-columns:1fr}.th-art{position:static;max-width:400px;margin:0 auto}.th-nav{min-width:0;padding:12px 18px}.th-count{display:none}.th-head,.th-foot{padding-left:18px;padding-right:18px}.th-body{padding-left:18px;padding-right:18px}}
+</style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3z" fill="#c8202f"/></svg></div>
+      MEDCORE<span style="color:var(--blue)">/14</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#training">Подготовка</a>
+      <a href="#conditions">Условия</a>
+      <a href="#reg" class="btn btn-soon js-reg" style="padding:12px 20px">Регистрация <span class="badge">Открыта</span></a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero wrap">
+  <div class="eyebrow">Интенсив · 2 недели</div>
+  <h1>БОЕВОЙ<br>МЕДИК<br>ЗА 14 ДНЕЙ</h1>
+  <p>Интенсивная подготовка военных медиков: <b>тактическая медицина</b>, первая помощь под огнём, <b>MARCH-алгоритм</b>, работа с кровопотерей и airway.</p>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <a class="btn btn-soon js-reg" href="#reg">Регистрация <span class="badge">Открыта</span></a>
+    <a class="btn btn-ghost" href="#training">Программа подготовки</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num" data-count="14">0</div><div class="lbl">дней интенсива</div></div>
+    <div class="stat"><div class="num" data-count="120">0</div><div class="lbl">часов практики</div></div>
+    <div class="stat"><div class="num" data-count="9">0</div><div class="lbl">модулей</div></div>
+    <div class="stat"><div class="num" style="font-size:17px">неограниченно</div><div class="lbl">мест в потоке</div></div>
+  </div>
+  <div class="scroll-hint">листай вниз</div>
+</div>
+
+<!-- ============ ПОДГОТОВКА ============ -->
+<section id="training" class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Этап 01 — Программа</div>
+    <h2>ПОДГОТОВКА 14 ДНЕЙ</h2>
+    <p>Курс построен по принципу нарастающей сложности: от базовой первой помощи до полноценных полевых учений с отработкой действий в боевых условиях.</p>
+  </div>
+  <div class="timeline">
+    <div class="t-card rv">
+      <div class="t-days d1">ДНИ 1–4</div>
+      <div class="t-ico i-blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20" stroke-linecap="round"/></svg></div>
+      <div>
+        <h3>Базовая тактическая медицина</h3>
+        <p>Фундамент курса: оценка состояния раненого, безопасность медика, MARCH-алгоритм как основа всех дальнейших действий.</p>
+        <ul><li>MARCH</li><li>Жгуты CAT</li><li>Давящие повязки</li><li>Пакировка раны</li></ul>
+      </div>
+    </div>
+    <div class="t-card rv">
+      <div class="t-days d2">ДНИ 5–8</div>
+      <div class="t-ico i-red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2-6 4 12 2-6h6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div>
+        <h3>Airway, дыхание и кровообращение</h3>
+        <p>Проходимость дыхательных путей, окклюзионные повязки при пневмотораксе, борьба с кровопотерей и шоком, гемостатические средства.</p>
+        <ul><li>Airway</li><li>Окклюзионная повязка</li><li>Гемостатики</li><li>Противошоковые меры</li></ul>
+      </div>
+    </div>
+    <div class="t-card rv">
+      <div class="t-days d3">ДНИ 9–11</div>
+      <div class="t-ico i-mint"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6.7 5.5 5.5 0 0 1 21.5 12C19 16.4 12 21 12 21z" stroke-linejoin="round"/></svg></div>
+      <div>
+        <h3>Триаж и эвакуация</h3>
+        <p>Приоритизация раненых при массовом поражении, категории triage, эвакуация раненых, работа в составе отделения.</p>
+        <ul><li>Триаж Immediate/Critical</li><li>Эвакуация</li><li>Взаимодействие с отделением</li></ul>
+      </div>
+    </div>
+    <div class="t-card rv">
+      <div class="t-days d1">ДНИ 12–14</div>
+      <div class="t-ico i-dark"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div>
+        <h3>Полевые учения и итоговый экзамен</h3>
+        <p>Финальные учения на полигоне в условиях, приближённых к боевым. Итоговая аттестация и отработка всех навыков курса.</p>
+        <ul><li>Полигон</li><li>Ночные учения</li><li>Экзамен</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ УСЛОВИЯ ============ -->
+<section id="conditions" class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Этап 02 — Детали</div>
+    <h2>УСЛОВИЯ УЧАСТИЯ</h2>
+    <p>Всё, что нужно знать перед стартом: кому подходит курс, что включено и как проходит обучение.</p>
+  </div>
+  <div class="cond-grid">
+    <div class="cond rv">
+      <div class="ico i-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg></div>
+      <h3>Формат и сроки</h3>
+      <p><b>14 дней активной подготовки</b> — интенсив с полной погружением в программу.</p>
+    </div>
+    <div class="cond rv">
+      <div class="ico i-red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6" stroke-linecap="round"/></svg></div>
+      <h3>Кому подходит</h3>
+      <p>Военнослужащие, добровольцы и медики без боевого опыта. Медицинское образование <b>не обязательно</b> — обучаем с нуля.</p>
+    </div>
+    <div class="cond rv">
+      <div class="ico i-mint"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z" stroke-linejoin="round"/><path d="M3 8l9 5 9-5M12 13v8" stroke-linejoin="round"/></svg></div>
+      <h3>Что включено</h3>
+      <p>Индивидуальная аптечка, форма, все расходные материалы и питание на полигоне.</p>
+    </div>
+    <div class="cond rv">
+      <div class="ico i-dark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Требования</h3>
+      <p>Возраст от 18 лет, базовая физподготовка, справка о состоянии здоровья. Наличие допуска к оружию — плюс, но не обязательно.</p>
+    </div>
+    <div class="cond rv">
+      <div class="ico i-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-8H7v8M7 3v5h8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="2" stroke-linejoin="round"/></svg></div>
+      <h3>Место проведения</h3>
+      <p>Учебный класс и полигон одного центра. Адрес и схему проезда отправляем после подтверждения участия.</p>
+    </div>
+    <div class="cond rv">
+      <div class="ico i-red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg></div>
+      <h3>Важно знать</h3>
+      <p>Любой желающий может поучаствовать и все заявки будут рассмотрены.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<div class="cta-final" id="reg">
+  <div class="rv">
+    <div class="eyebrow" style="justify-content:center">Следующий поток</div>
+    <h2>ГОТОВ СТАТЬ БОЕВЫМ МЕДИКОМ?</h2>
+    <p>Регистрация на поток уже открыта. Создай аккаунт — и твоё место в потоке MEDCORE/14 будет закреплено.</p>
+    <button class="btn btn-soon js-reg" id="regBtn">Регистрация <span class="badge">Открыта</span></button>
+  </div>
+</div>
+
+<div class="marquee"><div class="marquee-track" id="mq"></div></div>
+<footer>MEDCORE/14 · Курс боевой медицины · 2026</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+
+    <!-- вход / регистрация -->
+    <div class="m-view" id="viewAuth">
+      <div class="pill">Запись на поток</div>
+      <h2 id="authTitle">Регистрация</h2>
+      <div class="m-tabs">
+        <button type="button" id="tabReg" class="on">Регистрация</button>
+        <button type="button" id="tabLogin">Вход</button>
+      </div>
+      <form id="authForm" novalidate>
+        <div class="field">
+          <label for="fLogin">Логин</label>
+          <input id="fLogin" type="text" autocomplete="username" placeholder="Например: ivan.med" maxlength="30">
+        </div>
+        <div class="field">
+          <label for="fPass">Пароль</label>
+          <input id="fPass" type="password" autocomplete="new-password" placeholder="Минимум 6 символов" maxlength="60">
+        </div>
+        <div class="field" id="fPass2Wrap">
+          <label for="fPass2">Повторите пароль</label>
+          <input id="fPass2" type="password" autocomplete="new-password" placeholder="Ещё раз пароль">
+        </div>
+        <div class="form-err" id="formErr"></div>
+        <button class="btn btn-submit" type="submit" id="authSubmit">Зарегистрироваться</button>
+        <div class="switch-hint" id="switchHint"></div>
+      </form>
+    </div>
+
+    <!-- успех -->
+    <div class="m-view" id="viewSuccess">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 7"/></svg></div>
+      <h2>Вы зарегистрированы!</h2>
+      <div class="who">Логин: <b id="succLogin"></b></div>
+      <p style="margin-bottom:24px">Заявка на поток MEDCORE/14 создана. Даты старта объявим на этой странице — возвращайся в свой кабинет.</p>
+      <div class="row-btns">
+        <button class="btn btn-mint btn-sm" id="succTheory">Пройти теорию</button>
+        <button class="close" id="succClose">Закрыть</button>
+      </div>
+    </div>
+
+    <!-- личный кабинет -->
+    <div class="m-view" id="viewProfile">
+      <div class="pill">Личный кабинет</div>
+      <div class="avatar" id="pfAvatar"></div>
+      <h2 style="font-size:20px">Вы в системе</h2>
+      <div class="who" style="margin-top:6px">Логин: <b id="pfLogin"></b><br><span id="pfDate"></span><br>Теория: <b id="pfTheoryStat">не начата</b></div>
+      <div class="row-btns">
+        <button class="btn btn-mint btn-sm" id="pfTheory">Пройти теорию</button>
+        <button class="close" id="pfLogout">Выйти</button>
+        <button class="close" id="pfClose" style="background:var(--ink);color:#fff;border-color:var(--ink)">Закрыть</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ ТЕОРИЯ ============ -->
+<div class="theory" id="theory">
+  <div class="th-head">
+    <div class="th-brand">MEDCORE<span>/14</span> · Теория</div>
+    <div class="th-prog"><div class="th-prog-fill" id="thFill"></div></div>
+    <div class="th-count" id="thCount">1 / 12</div>
+    <button class="th-close" id="thClose" aria-label="Закрыть"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  </div>
+  <div class="th-body" id="thBody"></div>
+  <div class="th-foot">
+    <button class="btn btn-ghost th-nav" id="thPrev">Назад</button>
+    <div class="th-dots" id="thDots"></div>
+    <button class="btn btn-soon th-nav" id="thNext">Далее</button>
+  </div>
+</div>
+
+<script>
+/* marquee */
+const words = ['MARCH-алгоритм','Жгут CAT','Триаж','Airway','Кровопотеря','Шок','Иммобилизация','Гемостатики','Симуляторы','Полигон'];
+const mq = document.getElementById('mq');
+mq.innerHTML = [...words, ...words].map(w=>`<span>${w}</span><span style="color:var(--red)">+</span>`).join('');
+
+/* counters */
+document.querySelectorAll('.num[data-count]').forEach(el=>{
+  const target = +el.dataset.count; let cur = 0;
+  const step = ()=>{ cur += Math.max(1, Math.ceil((target-cur)/8)); el.textContent = cur >= target ? target : cur; if(cur<target) setTimeout(step, 70); };
+  setTimeout(step, 400);
+});
+
+/* reveal on scroll */
+const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), { threshold:.12 });
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ===== auth ===== */
+const AUTH_KEY = 'medcore14_user';
+const $ = id => document.getElementById(id);
+const overlay = $('overlay');
+let mode = 'reg';
+
+function getUser(){ try{ const u = JSON.parse(localStorage.getItem(AUTH_KEY)); return (u && u.login) ? u : null; }catch(e){ return null; } }
+function saveUser(u){ localStorage.setItem(AUTH_KEY, JSON.stringify(u)); }
+
+function showView(name){
+  document.querySelectorAll('.m-view').forEach(v=> v.classList.toggle('on', v.id === 'view' + name));
+}
+function setMode(m){
+  mode = m;
+  $('tabReg').classList.toggle('on', m==='reg');
+  $('tabLogin').classList.toggle('on', m==='login');
+  $('authTitle').textContent = m==='reg' ? 'Регистрация' : 'Вход';
+  $('authSubmit').textContent = m==='reg' ? 'Зарегистрироваться' : 'Войти';
+  $('fPass2Wrap').style.display = m==='reg' ? '' : 'none';
+  $('switchHint').innerHTML = m==='reg'
+    ? 'Уже есть аккаунт? <button type="button" id="switchBtn">Войти</button>'
+    : 'Нет аккаунта? <button type="button" id="switchBtn">Зарегистрироваться</button>';
+  $('switchBtn').onclick = ()=> setMode(m==='reg' ? 'login' : 'reg');
+  $('formErr').textContent = '';
+}
+function syncButtons(){
+  const u = getUser();
+  document.querySelectorAll('.js-reg').forEach(b=>{
+    const badge = b.querySelector('.badge');
+    if(b.firstChild && b.firstChild.nodeType === 3) b.firstChild.textContent = u ? 'Личный кабинет ' : 'Регистрация ';
+    if(badge) badge.textContent = u ? u.login : 'Открыта';
+  });
+}
+function openModal(){
+  const u = getUser();
+  if(u){
+    $('pfLogin').textContent = u.login;
+    $('pfAvatar').textContent = u.login.trim().charAt(0).toUpperCase();
+    $('pfDate').textContent = 'Дата регистрации: ' + u.date;
+    showView('Profile');
+  } else {
+    $('authForm').reset();
+    setMode('reg');
+    showView('Auth');
+  }
+  overlay.classList.add('show');
+}
+function closeModal(){ overlay.classList.remove('show'); }
+
+document.querySelectorAll('.js-reg').forEach(b=> b.addEventListener('click', e=>{ e.preventDefault(); openModal(); }));
+$('tabReg').onclick = ()=> setMode('reg');
+$('tabLogin').onclick = ()=> setMode('login');
+
+$('authForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const login = $('fLogin').value.trim();
+  const pass  = $('fPass').value;
+  const err   = $('formErr');
+  if(login.length < 3){ err.textContent = 'Логин — минимум 3 символа.'; return; }
+  if(pass.length < 6){ err.textContent = 'Пароль — минимум 6 символов.'; return; }
+  if(mode==='reg' && pass !== $('fPass2').value){ err.textContent = 'Пароли не совпадают.'; return; }
+  const u = getUser();
+  if(mode==='reg' && u && u.login === login){ err.textContent = 'Такой логин уже занят — войдите.'; return; }
+  if(mode==='login' && (!u || u.login !== login || u.pass !== pass)){ err.textContent = 'Неверный логин или пароль.'; return; }
+  err.textContent = '';
+  saveUser({ login, pass, date: new Date().toLocaleDateString('ru-RU') });
+  $('succLogin').textContent = login;
+  showView('Success');
+  syncButtons();
+  e.target.reset();
+});
+
+$('succClose').onclick = closeModal;
+$('pfClose').onclick  = closeModal;
+$('pfLogout').onclick = ()=>{ localStorage.removeItem(AUTH_KEY); $('authForm').reset(); setMode('reg'); showView('Auth'); syncButtons(); };
+overlay.onclick = e=>{ if(e.target===overlay) closeModal(); };
+syncButtons();
+
+/* ===== THEORY COURSE ===== */
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 7"/></svg>';
+
+const LESSONS = [
+{
+tag:'tag-dark', tagTxt:'Модуль 01 · База',
+title:'Безопасность медика',
+paras:[
+'Прежде чем бежать к раненому — оцени обстановку. Подавлен ли огонь? Есть ли укрытие на пути? Медик, который попадает под огонь, создаёт второго раненого и удваивает нагрузку на всё отделение.',
+'Правило простое: никакой помощи, пока ты сам не в безопасности. Перемещайся короткими перебежками от укрытия к укрытию, перед выходом предупреди раненого голосом, надень перчатки до контакта с кровью и жидкостями тела.'
+],
+points:['Оцени обстановку до выхода из укрытия','Перемещайся от укрытия к укрытию','Перчатки — всегда, до первого контакта','Не создавай второго раненого'],
+q:'Что делает медик в первую очередь, подойдя к месту ранения?',
+opts:['Бежит к самому тяжёлому раненому','Оценивает безопасность обстановки','Надевает и раскладывает аптечку'], ok:1,
+expl:'Помощь возможна только если сам медик в безопасности. Иначе появится второй раненый — и спасать придётся уже двоих.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><path d="M120 44l54 23v40c0 35-23 54-54 65-31-11-54-30-54-65V67z" fill="#1e56d6"/><path d="M120 66l36 15v30c0 24-15 37-36 45-21-8-36-21-36-45V81z" fill="#2f6ae8"/><path d="M120 94v48M96 118h48" stroke="#fff" stroke-width="13" stroke-linecap="round"/><path d="M46 186l13-22 13 22z" fill="#c8202f"/><rect x="55.4" y="173" width="5.2" height="9" rx="2" fill="#fff"/><circle cx="58" cy="184.8" r="2.5" fill="#fff"/><path d="M172 190l11-19 11 19z" fill="#c8202f"/><rect x="180.3" y="179" width="4.6" height="8" rx="1.8" fill="#fff"/><circle cx="182.6" cy="188.4" r="2.2" fill="#fff"/></svg>'
+},
+{
+tag:'tag-blue', tagTxt:'Модуль 02 · Алгоритм',
+title:'Первичный осмотр: MARCH',
+paras:[
+'MARCH — порядок осмотра раненого, выстроенный по скорости убийства: <b>M</b>assive bleeding (массивное кровотечение), <b>A</b>irway (проходимость дыхательных путей), <b>R</b>espiration (дыхание), <b>C</b>irculation (кровообращение), <b>H</b>ypothermia (гипотермия).',
+'Первичный осмотр занимает не больше 90 секунд. Сначала — то, что убивает за минуты (кровь), в конце — то, что убивает через часы (холод). Эта последовательность — скелет всех твоих действий на поле боя.'
+],
+points:['Осмотр — не больше 90 секунд','Порядок = скорость угрозы','MARCH нужно знать наизусть'],
+q:'С чего начинается алгоритм MARCH?',
+opts:['Airway — дыхательные пути','Massive bleeding — кровотечение','Circulation — кровообращение'], ok:1,
+expl:'Артериальное кровотечение убивает за 2–3 минуты — быстрее любой другой угрозы. Поэтому M, а не A.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><g font-family="Unbounded,sans-serif" font-weight="700" font-size="11" text-anchor="middle"><rect x="52" y="38" width="136" height="27" rx="13.5" fill="#c8202f"/><text x="120" y="56" fill="#fff">M — КРОВОТЕЧЕНИЕ</text><rect x="52" y="74" width="136" height="27" rx="13.5" fill="#1e56d6"/><text x="120" y="92" fill="#fff">A — ДЫХ. ПУТИ</text><rect x="52" y="110" width="136" height="27" rx="13.5" fill="#12876a"/><text x="120" y="128" fill="#fff">R — ДЫХАНИЕ</text><rect x="52" y="146" width="136" height="27" rx="13.5" fill="#33415e"/><text x="120" y="164" fill="#fff">C — КРОВООБРАЩЕНИЕ</text><rect x="52" y="182" width="136" height="27" rx="13.5" fill="#35c49c"/><text x="120" y="200" fill="#fff">H — ГИПОТЕРМИЯ</text></g><path d="M120 65v9M120 101v9M120 137v9M120 173v9" stroke="#54648a" stroke-width="2.5" stroke-linecap="round"/></svg>'
+},
+{
+tag:'tag-red', tagTxt:'Модуль 03 · M — Кровотечение',
+title:'Жгут CAT: остановить артерию',
+paras:[
+'При ранении крупной артерии человек теряет сознание за 30–60 секунд, а через 2–3 минуты наступает необратимая смерть. Жгут — единственный способ остановить массивное кровотечение на конечности.',
+'Наложи жгут <b>5–7 см выше раны</b> (не на сустав), затяни до полной остановки кровотечения, зафиксируй ворот и <b>запиши время</b> на липучке. Жгут не снимают и не ослабляют до хирурга. Сомневаешься — накладывай: пережатая конечность лечится, кровопотеря — нет.'
+],
+points:['5–7 см выше раны, не на сустав','Затянуто до полной остановки крови','Время наложения — на жгуте','Не снимать и не ослаблять'],
+q:'Куда правильно наложить жгут на конечность?',
+opts:['Прямо поверх раны','Ниже раны, ближе к кисти','На 5–7 см выше раны, не на сустав'], ok:2,
+expl:'Жгут пережимает артерию выше точки повреждения. На суставе артерию не пережать — жгут будет бесполезен.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><g transform="rotate(-18 120 120)"><rect x="36" y="96" width="168" height="48" rx="24" fill="#f2c9a4"/><rect x="36" y="96" width="34" height="48" rx="17" fill="#33415e"/><rect x="118" y="85" width="20" height="70" rx="6" fill="#c8202f"/><rect x="123" y="66" width="10" height="28" rx="4" fill="#0d1522"/><rect x="112" y="88" width="32" height="9" rx="4.5" fill="#fff" opacity=".35"/></g><path d="M186 66c8 10 12 17 12 23a12 12 0 0 1-24 0c0-6 4-13 12-23z" fill="#c8202f" opacity=".9"/><path d="M52 66c6 8 9 13 9 18a9 9 0 0 1-18 0c0-5 3-10 9-18z" fill="#c8202f" opacity=".5"/></svg>'
+},
+{
+tag:'tag-red', tagTxt:'Модуль 04 · M — Кровотечение',
+title:'Давящая повязка и пакирование',
+paras:[
+'Жгут нельзя наложить на шею, пах и подмышки. Здесь работает <b>давящая повязка</b>: плотная, туго, до остановки крови, поверх раны.',
+'Глубокие проникающие раны <b>пакируют</b>: заполни полость гемостатической марлей, сверху — давящая повязка и сильное прямое давление рукой минимум 3 минуты. Не приподнимай руку рывком — можно сорвать формирующийся тромб.'
+],
+points:['Шея / пах / подмышки — давящая повязка','Глубокие раны пакируем марлей','Давление — минимум 3 минуты'],
+q:'Ранение в пах с сильным кровотечением. Твои действия?',
+opts:['Наложить жгут на бедро','Давящая повязка с пакированием','Прижать рукой и ждать эвакуацию'], ok:1,
+expl:'На пах жгут не наложить — только плотная давящая повязка с пакированием раны гемостатической марлей.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><path d="M120 62l9 17 19-6-4 19 18 6-13 13 11 17-20 2-2 19-16-9-13 15-7-19-20 4 5-18-17-9 18-9-5-18 20 3z" fill="#c8202f" opacity=".85"/><rect x="138" y="152" width="62" height="32" rx="9" fill="#fff" stroke="#1e56d6" stroke-width="4"/><path d="M146 144l-14-22" stroke="#1e56d6" stroke-width="6" stroke-linecap="round"/><path d="M124 114l-9 9M135 121l-6 12" stroke="#7a1220" stroke-width="4" stroke-linecap="round"/></svg>'
+},
+{
+tag:'tag-blue', tagTxt:'Модуль 05 · A — Дых. пути',
+title:'Airway: открыть дыхание',
+paras:[
+'Непроходимость дыхательных путей убивает раненого за 3–5 минут. Открой airway: <b>запрокинь голову</b> и <b>подними подбородок</b>, осмотри рот и удали видимые инородные тела.',
+'Если раненый в сознании, но дыхание затруднено (кровь, рвота, отёк) — уложи его в <b>устойчивое боковое положение</b>. Оно не даёт языку и жидкостям перекрыть дыхание и позволяет содержимому рта свободно вытекать.'
+],
+points:['Запрокинуть голову, поднять подбородок','Очистить рот от видимых тел','Боковое положение при затруднённом дыхании'],
+q:'Раненый в сознании, дышит с хрипом, во рту кровь. Что делаем?',
+opts:['Запрокинуть голову на спине','Уложить в устойчивое боковое положение','Ничего не делать — дышит же'], ok:1,
+expl:'На спине жидкость западёт в дыхательные пути. Боковое положение сохраняет проходимость и даёт крови вытекать.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><circle cx="112" cy="108" r="36" fill="#f2c9a4"/><path d="M84 128q28 24 60 8" stroke="#e8b48b" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M96 66q-26 22-24 52" stroke="#1e56d6" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M78 108l-8 12 14 2z" fill="#1e56d6"/><path d="M146 118q20-4 28-14M146 128q22 0 32-6" stroke="#12876a" stroke-width="5" stroke-linecap="round"/><circle cx="100" cy="100" r="4" fill="#0d1522"/></svg>'
+},
+{
+tag:'tag-blue', tagTxt:'Модуль 06 · R — Дыхание',
+title:'Пневмоторакс и окклюзия',
+paras:[
+'Сквозное ранение груди — это открытый пневмоторакс: воздух с каждым вдохом входит в плевральную полость и сдавливает лёгкое. Раненого душит, слышен характерный «всасывающий» звук.',
+'Закрой отверстие <b>окклюзионной повязкой</b> (герметичный пластырь или специальная повязка) на все края, кроме одного — так воздух сможет выйти, но не войдёт. Следи за дыханием постоянно: ухудшение после закрытия раны — признак напряжённого пневмоторакса, нужна срочная декомпрессия.'
+],
+points:['«Всасывающий» звук = пневмоторакс','Закрыть все края, кроме одного','Дыхание контролируем постоянно'],
+q:'Сквозное ранение груди, рана «шипит» при дыхании. Действия?',
+opts:['Закрыть рану окклюзионной повязкой','Перевязать обычной марлевой повязкой','Заклеить пластырем все края герметично'], ok:0,
+expl:'Нужна герметичная повязка с одним открытым краем — воздух выйдет при выдохе, но не войдёт при вдохе.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><path d="M120 56c-30 0-46 22-46 50v72h92v-72c0-28-16-50-46-50z" fill="#33415e"/><rect x="96" y="92" width="48" height="48" rx="9" fill="#fff" stroke="#c8202f" stroke-width="4"/><path d="M120 104v24M108 116h24" stroke="#c8202f" stroke-width="7" stroke-linecap="round"/><path d="M158 104h26M158 128h26" stroke="#35c49c" stroke-width="5" stroke-linecap="round"/><path d="M182 104l8-6v12zM182 128l8-6v12z" fill="#35c49c"/></svg>'
+},
+{
+tag:'tag-red', tagTxt:'Модуль 07 · C — Кровообращение',
+title:'Шок и гемостатики',
+paras:[
+'Потеря 1 литра крови — шок: бледная холодная кожа, липкий пот, частый слабый пульс, тревожность, жажда. Раненый в шоке без помощи погибает — даже если кровотечение уже остановлено.',
+'Останови кровь всеми доступными средствами: <b>гемостатик</b> (Celox, HemCon) засыпается прямо в рану, сверху — давящая повязка. Уложи раненого на спину, приподняв ноги (если нет травм таза и конечностей), и укрой — тепло продлевает жизнь.'
+],
+points:['Бледность + холодный пот + тахикардия = шок','Гемостатик — в рану, под давление','Тепло и приподнятые ноги'],
+q:'Какие признаки говорят о шоке?',
+opts:['Красное лицо и высокое давление','Бледность, холодный липкий пот, частый пульс','Сонливость и ровный спокойный пульс'], ok:1,
+expl:'Кожа бледнеет, пот холодный и липкий, пульс частый и слабый — организм перераспределяет кровь на жизненно важные органы.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><path d="M120 176s-46-29-58-58a31 31 0 0 1 58-19 31 31 0 0 1 58 19c-12 29-58 58-58 58z" fill="#c8202f"/><polyline points="58,118 90,118 102,94 118,140 134,102 146,118 182,118" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M172 60c6 8 9 13 9 18a9 9 0 0 1-18 0c0-5 3-10 9-18z" fill="#1e56d6"/></svg>'
+},
+{
+tag:'tag-mint', tagTxt:'Модуль 08 · H — Гипотермия',
+title:'Холод — тихий убийца',
+paras:[
+'Даже при +15°C раненый с кровопотерей быстро теряет тепло. Гипотермия разрушает свёртываемость крови — и все твои жгуты и повязки начинают работать хуже.',
+'Уложи раненого на изоляцию (коврик, спальник — <b>обязательно от земли</b>), укутай полностью, включи обогрев в машине эвакуации. Правило поля боя: любой раненый — уже потенциально гипотермичный, даже летом.'
+],
+points:['Изолируй от земли всегда','Укутай полностью, включая голову','Холод разрушает свёртываемость крови'],
+q:'Почему гипотермия так опасна при кровопотере?',
+opts:['Вызывает обморожение кожи','Разрушает свёртываемость крови','Делает раненого раздражительным'], ok:1,
+expl:'При снижении температуры тромбоциты работают плохо — кровотечение продолжается сильнее, и любая помощь теряет эффективность.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><rect x="104" y="50" width="15" height="96" rx="7.5" fill="#fff" stroke="#1e56d6" stroke-width="4"/><circle cx="111.5" cy="162" r="21" fill="#1e56d6"/><rect x="108" y="86" width="7" height="62" rx="3.5" fill="#35c49c"/><g stroke="#35c49c" stroke-width="5" stroke-linecap="round"><path d="M176 78v44M154 100h44M161 85l30 30M191 85l-30 30"/></g></svg>'
+},
+{
+tag:'tag-dark', tagTxt:'Модуль 09 · Триаж',
+title:'Приоритеты при массовом поражении',
+paras:[
+'При массовом поражении ты не спасёшь всех — но спасёшь максимум, если правильно расставишь приоритеты. На каждого раненого — считанные секунды осмотра.',
+'<b>Immediate (красный)</b> — тяжёлые, но выживаемые: им помогаешь первыми. <b>Delayed (жёлтый)</b> — тяжёлые, но стабильные: подождут. <b>Minimal (зелёный)</b> — ходячие: сами или помогают тебе. <b>Expectant (чёрный)</b> — без признаков жизни или без шанса: ресурсы на них не тратим.'
+],
+points:['Красный — спасаем первым','Жёлтый — стабилизировали, ждут','Чёрный — ресурсы не тратим'],
+q:'Кого эвакуируем в первую очередь?',
+opts:['Ходячих лёгкораненых','Красных — Immediate','Чёрных — Expectant'], ok:1,
+expl:'Красные — тяжёлые, но выживаемые: вмешательство прямо сейчас спасает им жизнь. Ходячие подождут.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><g transform="rotate(-12 84 84)"><rect x="52" y="62" width="62" height="40" rx="9" fill="#c8202f"/><circle cx="63" cy="82" r="5.5" fill="#fff"/><text x="88" y="89" font-family="Unbounded,sans-serif" font-weight="700" font-size="15" fill="#fff" text-anchor="middle">I</text></g><g transform="rotate(9 162 84)"><rect x="132" y="62" width="62" height="40" rx="9" fill="#d8a812"/><circle cx="143" cy="82" r="5.5" fill="#fff"/><text x="168" y="89" font-family="Unbounded,sans-serif" font-weight="700" font-size="15" fill="#fff" text-anchor="middle">D</text></g><g transform="rotate(-7 84 162)"><rect x="52" y="140" width="62" height="40" rx="9" fill="#12876a"/><circle cx="63" cy="160" r="5.5" fill="#fff"/><text x="88" y="167" font-family="Unbounded,sans-serif" font-weight="700" font-size="15" fill="#fff" text-anchor="middle">M</text></g><g transform="rotate(11 164 160)"><rect x="132" y="138" width="62" height="40" rx="9" fill="#0d1522"/><circle cx="143" cy="158" r="5.5" fill="#fff"/><text x="168" y="165" font-family="Unbounded,sans-serif" font-weight="700" font-size="15" fill="#fff" text-anchor="middle">E</text></g></svg>'
+},
+{
+tag:'tag-blue', tagTxt:'Модуль 10 · Эвакуация',
+title:'Эвакуация и передача по MIST',
+paras:[
+'Стабилизировал — эвакуируй. Раненый без эвакуации погибнет от вторичных осложнений, даже если первая помощь была идеальной. Вопрос эвакуации решается параллельно с лечением, а не после.',
+'Передавай раненого по схеме <b>MIST</b>: <b>M</b>echanism — механизм травмы, <b>I</b>njuries — повреждения, <b>S</b>igns — пульс, дыхание, сознание, <b>T</b>reatment — что сделано (жгуты и время их наложения). Повесь на раненого триаж-бирку — принимающий врач не должен ничего угадывать.'
+],
+points:['Эвакуация решается сразу','Схема передачи — MIST','Все мероприятия — на бирке'],
+q:'Что обязан передать принимающему медику?',
+opts:['Только категорию триажа','MIST: механизм, повреждения, состояние, лечение','ФИО и воинскую часть раненого'], ok:1,
+expl:'MIST — мировой стандарт передачи. Без него врач не узнает, когда наложен жгут, и не сможет принять верное решение.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><rect x="36" y="110" width="168" height="14" rx="7" fill="#0d1522"/><rect x="52" y="104" width="136" height="14" rx="7" fill="#33415e"/><path d="M68 104q14-28 44-28h40q30 0 40 28z" fill="#c8202f"/><circle cx="76" cy="86" r="13" fill="#f2c9a4"/><path d="M70 60h100" stroke="#1e56d6" stroke-width="6" stroke-linecap="round"/><path d="M164 50l14 10-14 10z" fill="#1e56d6"/><path d="M60 124v14M180 124v14" stroke="#0d1522" stroke-width="6" stroke-linecap="round"/></svg>'
+},
+{
+tag:'tag-mint', tagTxt:'Модуль 11 · Снаряжение',
+title:'Аптечка бойца — IFAK',
+paras:[
+'IFAK — индивидуальная аптечка бойца: её носишь ты, и предназначена она в первую очередь для тебя самого. Знай её содержимое на ощупь, с закрытыми глазами.',
+'Базовый состав: <b>два жгута CAT</b> (одного может не хватить на крупную конечность), давящая повязка, окклюзионная повязка, гемостатик, ножницы, перчатки. Размещай так, чтобы добраться с обеих рук — включая раненую сторону.'
+],
+points:['Два жгута — минимум','Доступ к IFAK с обеих рук','Сроки годности проверяем регулярно'],
+q:'Сколько жгутов должно быть в IFAK как минимум?',
+opts:['Один','Два','Три'], ok:1,
+expl:'Минимум два: одного может не хватить на толстую конечность, а ранений с кровотечением может быть несколько.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><rect x="68" y="84" width="104" height="88" rx="14" fill="#12876a"/><path d="M68 96q52-28 104 0v14H68z" fill="#0f6b53"/><path d="M120 62v24M108 74h24" stroke="#fff" stroke-width="8" stroke-linecap="round"/><rect x="84" y="52" width="15" height="36" rx="5" fill="#c8202f"/><rect x="102" y="48" width="26" height="40" rx="7" fill="#fff" stroke="#54648a" stroke-width="3"/><rect x="131" y="56" width="20" height="32" rx="6" fill="#35c49c"/><circle cx="120" cy="132" r="16" fill="none" stroke="#fff" stroke-width="4" opacity=".6"/></svg>'
+},
+{
+tag:'tag-dark', tagTxt:'Модуль 12 · Сводка',
+title:'Весь MARCH целиком',
+paras:[
+'Соберём всё вместе: <b>безопасность</b> → кровотечение (жгут / пакирование) → дыхательные пути → дыхание (окклюзия) → кровообращение (шок, гемостатики) → гипотермия → триаж и эвакуация с передачей по MIST.',
+'Эта теория — фундамент. На полигоне ты отработаешь каждый шаг десятки раз под стрессом, пока руки не начнут действовать сами. Остался последний вопрос — и теория пройдена.'
+],
+points:['MARCH — наизусть','Теория + практика = навык','Полигон ждёт'],
+q:'Выбери правильный порядок действий медика.',
+opts:['MARCH','ABC-MARCH','C-AB / «сначала сердце»','CMARCH'], ok:0,
+expl:'MARCH: сначала массивное кровотечение — это то, что убивает раненого быстрее всего.',
+svg:'<svg viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="92" fill="#e9eefb"/><path d="M98 46l13 34h28l13-34z" fill="#1e56d6"/><path d="M94 46h24l-8 34h-24z" fill="#c8202f"/><circle cx="120" cy="140" r="46" fill="#c8202f" stroke="#fff" stroke-width="8"/><path d="M97 140l17 17 30-34" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+}
+];
+
+const theoryEl = $('theory');
+let prog = { furthest:0, answers:{}, done:false };
+let step = 0;
+
+function theoryKey(){ const u = getUser(); return 'medcore14_theory_' + (u ? u.login : 'guest'); }
+function loadProg(){
+  try{ const p = JSON.parse(localStorage.getItem(theoryKey())); if(p) prog = Object.assign({furthest:0,answers:{},done:false}, p); }catch(e){}
+}
+function saveProg(){ localStorage.setItem(theoryKey(), JSON.stringify(prog)); }
+
+function renderLesson(){
+  const L = LESSONS[step];
+  const a = prog.answers[step];
+  let quiz = '<div class="th-quiz" id="thQuiz"><div class="th-q">Проверь себя: ' + L.q + '</div>';
+  L.opts.forEach((o,j)=>{
+    let cls = 'th-opt';
+    if(a !== undefined){ if(j === L.ok) cls += ' ok'; else if(j === a) cls += ' bad'; }
+    quiz += '<button class="' + cls + '" data-q="' + j + '"' + (a !== undefined ? ' disabled' : '') + '><span class="th-letter">' + 'ABC'[j] + '</span>' + o + '</button>';
+  });
+  if(a !== undefined) quiz += '<div class="th-expl"><b>' + (a === L.ok ? 'Верно. ' : 'Не совсем. ') + '</b>' + L.expl + '</div>';
+  quiz += '</div>';
+
+  $('thBody').innerHTML =
+    '<div class="th-lesson">' +
+      '<div class="th-art"><div class="th-art-badge">' + L.tagTxt + '</div>' + L.svg + '</div>' +
+      '<div class="th-text"><div class="th-tag ' + L.tag + '">' + L.tagTxt + '</div>' +
+      '<h3>' + L.title + '</h3>' +
+      L.paras.map(p => '<p>' + p + '</p>').join('') +
+      '<ul class="th-points">' + L.points.map(p => '<li>' + p + '</li>').join('') + '</ul>' +
+      quiz + '</div></div>';
+
+  $('thBody').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderChrome(){
+  const len = LESSONS.length;
+  const answered = prog.answers[step] !== undefined;
+  const pct = step >= len ? 100 : Math.round((step + (answered ? 1 : 0)) / len * 100);
+  $('thFill').style.width = pct + '%';
+  $('thCount').textContent = step >= len ? 'Итог' : 'Урок ' + (step + 1) + ' / ' + len;
+  $('thPrev').style.visibility = step > 0 ? 'visible' : 'hidden';
+  const nextBtn = $('thNext');
+  nextBtn.childNodes[0].textContent = step >= len ? 'Завершить ' : 'Далее ';
+  const badge = nextBtn.querySelector('.badge');
+  if(badge) badge.style.display = 'none';
+}
+
+function renderDots(){
+  $('thDots').innerHTML = LESSONS.map((_,i)=>{
+    const cls = 'th-dot' + (i === step ? ' on' : '') + ((i < prog.furthest || prog.done) ? ' done' : '');
+    return '<button class="' + cls + '" data-d="' + i + '" aria-label="Урок ' + (i+1) + '"></button>';
+  }).join('');
+}
+
+function renderFinish(){
+  const len = LESSONS.length;
+  const corr = Object.keys(prog.answers).filter(i => prog.answers[i] === LESSONS[i].ok).length;
+  $('thFill').style.width = '100%';
+  $('thCount').textContent = 'Итог';
+  $('thPrev').style.visibility = 'visible';
+  $('thNext').childNodes[0].textContent = 'Завершить ';
+  const badge = $('thNext').querySelector('.badge'); if(badge) badge.style.display = 'none';
+  $('thBody').innerHTML =
+    '<div class="th-finish">' +
+      '<div class="check">' + CHECK_SVG + '</div>' +
+      '<h3>Теория пройдена!</h3>' +
+      '<p>Ты изучил все ' + len + ' модулей курса MEDCORE/14. Фундамент заложен — дальше полигон, учения и практика.</p>' +
+      '<div class="th-grades">' +
+        '<div class="th-grade"><div class="n">' + len + '/' + len + '</div><div class="l">модулей</div></div>' +
+        '<div class="th-grade"><div class="n">' + corr + '</div><div class="l">верных ответов</div></div>' +
+        '<div class="th-grade"><div class="n">' + Math.round(corr / len * 100) + '%</div><div class="l">результат</div></div>' +
+      '</div>' +
+      '<button class="btn btn-soon" id="thDone">Завершить</button>' +
+    '</div>';
+  $('thDone').onclick = finishTheory;
+  $('thBody').scrollTo({ top: 0, behavior: 'smooth' });
+  renderDots();
+}
+
+function renderStep(){
+  if(step >= LESSONS.length){ renderFinish(); return; }
+  renderLesson(); renderChrome(); renderDots();
+}
+
+function finishTheory(){
+  prog.done = true; prog.furthest = LESSONS.length; saveProg();
+  closeTheory(); updateTheoryStat();
+}
+function openTheory(){
+  loadProg();
+  step = Math.min(prog.furthest, LESSONS.length);
+  theoryEl.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  renderStep();
+}
+function closeTheory(){
+  theoryEl.classList.remove('show');
+  document.body.style.overflow = '';
+  updateTheoryStat();
+}
+
+$('thClose').onclick = closeTheory;
+$('thPrev').onclick = ()=>{ if(step > 0){ step--; renderStep(); } };
+$('thNext').onclick = ()=>{
+  if(step >= LESSONS.length){ finishTheory(); return; }
+  if(prog.answers[step] === undefined){
+    const q = $('thQuiz'); if(q){ q.classList.add('warn'); q.scrollIntoView({ behavior:'smooth', block:'center' }); }
+    return;
+  }
+  step++;
+  prog.furthest = Math.max(prog.furthest, step);
+  saveProg();
+  renderStep();
+};
+
+$('thBody').addEventListener('click', e=>{
+  const opt = e.target.closest('.th-opt');
+  if(!opt || opt.disabled || step >= LESSONS.length) return;
+  prog.answers[step] = +opt.dataset.q;
+  saveProg();
+  renderLesson(); renderChrome(); renderDots();
+});
+$('thDots').addEventListener('click', e=>{
+  const d = e.target.closest('.th-dot');
+  if(!d) return;
+  const i = +d.dataset.d;
+  if(i <= prog.furthest || prog.done){ step = i; renderStep(); }
+});
+document.addEventListener('keydown', e=>{
+  if(!theoryEl.classList.contains('show')) return;
+  if(e.key === 'Escape') closeTheory();
+});
+
+function updateTheoryStat(){
+  const el = $('pfTheoryStat'); if(!el) return;
+  let p = null;
+  try{ p = JSON.parse(localStorage.getItem(theoryKey())); }catch(e){}
+  if(!p || (!p.furthest && !Object.keys(p.answers || {}).length)){ el.textContent = 'не начата'; return; }
+  const len = LESSONS.length;
+  if(p.done){
+    const corr = Object.keys(p.answers || {}).filter(i => p.answers[i] === LESSONS[i].ok).length;
+    el.textContent = 'пройдена · верно ' + corr + '/' + len;
+  } else {
+    el.textContent = 'урок ' + (Math.min(p.furthest, len - 1) + 1) + ' из ' + len;
+  }
+}
+
+const _openModal = openModal;
+openModal = function(){ _openModal(); updateTheoryStat(); };
+$('succTheory').onclick = ()=>{ closeModal(); openTheory(); };
+$('pfTheory').onclick  = ()=>{ closeModal(); openTheory(); };
+</script>
+</body>
+</html>
